@@ -1,0 +1,29 @@
+name: Version Update
+
+on:
+  push:
+    paths-ignore:
+      - pom.xml
+    branches: [master]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: version
+        run: mvn release:update-versions -DautoVersionSubmodules=true
+
+      - name: Commit files
+        run: |
+          git config --global user.email "suleymankotan08@gmail.com"
+          git config --global user.name "suleymankotan"
+          git commit -m "Version Update" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.TOKEN }}
