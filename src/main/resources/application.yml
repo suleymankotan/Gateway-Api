@@ -1,1 +1,16 @@
+server:
+  port: 8000
+
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - name: GlobalFilter
+      routes:
+        - id: authentication-api
+          uri: ${AUTH_URI:http://authentication-api:8010}
+          predicates:
+            - Path=/auth/**
+
+auth-control.autUrl: http://authentication-api:8010/auth/control-auth
 
