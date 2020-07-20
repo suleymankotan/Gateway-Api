@@ -53,7 +53,7 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
 
         return ((exchange, chain) -> {
             ServerHttpRequest request =exchange.getRequest();
-            log.info("Path --> "+request.getPath().toString());
+            log.info("Path --> "+request.getPath().toString() + " IP: " +request.getRemoteAddress());
             if (request.getPath().toString().equals("/auth/login")
                     ||request.getPath().toString().equals("/auth/forgot-password")
                     ||request.getPath().toString().equals("/auth/register"))
