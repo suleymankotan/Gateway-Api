@@ -8,8 +8,21 @@ spring:
         - name: GlobalFilter
       routes:
         - id: authentication-api
+          uri: ${AUTH_URI:http://prod_authentication-api:8010}
+          predicates:
+            - Path=/auth/**
+auth-control.autUrl: http://prod_authentication-api:8010/auth/control-auth
+
+---
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - name: GlobalFilter
+      routes:
+        - id: authentication-api
           uri: ${AUTH_URI:http://localhost:8010}
           predicates:
             - Path=/auth/**
-auth-control.autUrl: http://authentication-api:8010/auth/control-auth
+auth-control.autUrl: http://localhost:8010/auth/control-auth
 
