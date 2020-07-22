@@ -56,7 +56,9 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
             log.info("Path --> "+request.getPath().toString() + " IP: " +request.getRemoteAddress());
             if (request.getPath().toString().equals("/auth/login")
                     ||request.getPath().toString().equals("/auth/forgot-password")
-                    ||request.getPath().toString().equals("/auth/register"))
+                    ||request.getPath().toString().equals("/auth/register")
+                    ||request.getPath().toString().equals("/auth/register/active")
+                    ||request.getPath().toString().equals("/mail/send"))
             {
                 ServerHttpRequest modifiedRequest=exchange.getRequest().mutate().build();
                 return chain.filter(exchange.mutate().request(modifiedRequest).build());
