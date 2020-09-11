@@ -1,7 +1,7 @@
 apiVersion: networking.gke.io/v1beta2
 kind: ManagedCertificate
 metadata:
-  name: backend-ssl
+  name: gateway-api-ssl
 spac:
   domains:
     - api.suleymankotan.com

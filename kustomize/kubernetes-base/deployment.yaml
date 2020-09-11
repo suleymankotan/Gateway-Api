@@ -37,11 +37,11 @@ spec:
             httpGet:
               port: 8000
               path: /actuator/health
-            periodSeconds: 5000
-            timeoutSeconds: 6000
+            periodSeconds: 300
+            timeoutSeconds: 300
           livenessProbe:
             httpGet:
               port: 8000
               path: /actuator/health
-            periodSeconds: 5000
-            timeoutSeconds: 6000
+            periodSeconds: 300
+            timeoutSeconds: 300

@@ -5,6 +5,3 @@ resources:
 - kubernetes-base/ingress.yaml
 - kubernetes-base/service.yaml
 - kubernetes-base/ssl.yaml
-images:
-- name: gateway-api
-  newName: eu.gcr.io/basic-advantage-281702/gateway-api
