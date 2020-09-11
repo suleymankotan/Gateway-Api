@@ -45,5 +45,3 @@ spec:
               path: /actuator/health
             periodSeconds: 300
             timeoutSeconds: 300
-      nodeSelector:
-       node: prod

@@ -3,9 +3,9 @@ kind: Ingress
 metadata:
   name: gateway-api-ingress
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: prod-public-ip
+    kubernetes.io/ingress.global-static-ip-name: gateway-public-ip
     kubernetes.io/ingress.allow-http: "false"
-    netwroking.gke.io/managed-certificates: prod-ssl
+    netwroking.gke.io/managed-certificates: gateway-ssl
 spec:
   rules:
     - host: api.suleymankotan.com

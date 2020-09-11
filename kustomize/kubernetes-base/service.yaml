@@ -12,5 +12,5 @@ spec:
       protocol: TCP
   selector:
     app: gateway-api
-  type: NodePort
+  type: LoadBalancer
 
