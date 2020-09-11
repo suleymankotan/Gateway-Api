@@ -58,7 +58,7 @@ jobs:
       - name: Deploy
         run: |
           gcloud container clusters get-credentials prod --zone us-west3-c --project basic-advantage-281702
-          kustomize edit set image gateway-api=eu.gcr.io/basic-advantage-281702/gateway-api:"$GITHUB_SHA"
+          kustomize edit set image gateway-api=eu.gcr.io/basic-advantage-281702/gateway-api:${{ github.sha }}
           kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/gateway-api
           kubectl get services -o wide
