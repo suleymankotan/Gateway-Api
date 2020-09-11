@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-api
+  labels:
+    app: gateway-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-api
+  template:
+    metadata:
+      labels:
+        app: gateway-api
+    spec:
+      containers:
+        - name: gateway-api
+          image: gateway-api
+          env:
+            - name: AUTH_URI
+              value: http://authentication-api:8010
+            - name: MAIL_URI
+              value: http://mail-api:8015
+            - name: ALERT_URI
+              value: http://alert-api:8025
+          resources:
+            requests:
+              memory: 500Mi
+              cpu: 200m
+            limits:
+              memory: 750Mi
+              cpu: 350m
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              port: 8000
+              path: /actuator/health
+            periodSeconds: 5000
+            timeoutSeconds: 6000
+          livenessProbe:
+            httpGet:
+              port: 8000
+              path: /actuator/health
+            periodSeconds: 5000
+            timeoutSeconds: 6000

@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: backend-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: backend-public-ip
+    kubernetes.io/ingress.allow-http: "false"
+    netwroking.gke.io/managed-certificates: backend-ssl
+spec:
+  rules:
+    - host: api.suleymankotan.com
+      http:
+        paths:
+          - backend:
+              serviceName: gateway-service
+              servicePort: 8000
