@@ -19,7 +19,7 @@ env:
 jobs:
   setup-build-publish-deploy:
     name: Staging Pipeline
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
