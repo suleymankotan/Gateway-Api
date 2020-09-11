@@ -58,6 +58,7 @@ jobs:
       - name: Deploy
         run: |
           gcloud container clusters get-credentials prod --zone us-west3-c --project basic-advantage-281702
+          cd kustomize/
           kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/gateway-api
           kubectl get services -o wide
