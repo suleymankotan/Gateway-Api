@@ -57,7 +57,7 @@ jobs:
 
       - name: Deploy
         run: |
-          gcloud container clusters get-credentials prod --zone europe-west3-c --project ${{ secrets.GKE_STAGING_PROJECT }}
+          gcloud container clusters get-credentials prod --zone us-west3-c --project basic-advantage-281702
           ./kustomize edit set image gateway-api=eu.gcr.io/${{ secrets.GKE_STAGING_PROJECT }}/gateway-api:"$GITHUB_SHA"
           ./kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/gateway-api
