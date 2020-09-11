@@ -48,7 +48,7 @@ jobs:
            --build-arg GITHUB_SHA=${{ github.sha }}  .
       - name: Publish
         run: |
-          docker push eu.gcr.io/${{ secrets.GKE_STAGING_PROJECT }}/gateway-api:latest
+          docker push eu.gcr.io/${{ secrets.GKE_STAGING_PROJECT }}/gateway-api
 
       - name: Set up Kustomize
         run: |
