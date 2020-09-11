@@ -48,7 +48,7 @@ jobs:
            --build-arg GITHUB_SHA=${{ github.sha }}  .
       - name: Publish
         run: |
-          docker push eu.gcr.io/${{ secrets.GKE_STAGING_PROJECT }}/gateway-api:${{ github.sha }}
+          docker push eu.gcr.io/${{ secrets.GKE_STAGING_PROJECT }}/gateway-api:latest
 
       - name: Set up Kustomize
         run: |
@@ -58,7 +58,7 @@ jobs:
       - name: Deploy
         run: |
           gcloud container clusters get-credentials prod --zone us-west3-c --project basic-advantage-281702
-          kustomize edit set image gateway-api=eu.gcr.io/basic-advantage-281702/gateway-api:${{ github.sha }}
+          kustomize edit set image gateway-api=eu.gcr.io/basic-advantage-281702/gateway-api
           kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/gateway-api
           kubectl get services -o wide
