@@ -11,6 +11,14 @@ spring:
           uri: ${AUTH_URI:http://localhost:8010}
           predicates:
             - Path=/auth/**
+        - id: mail-api
+          uri: ${MAIL_URI:http://localhost:8015}
+          predicates:
+            - Path=/mail/**
+        - id: alert-api
+          uri: ${ALERT_URI:http://localhost:8025}
+          predicates:
+            - Path=/alert/**
 auth-control.autUrl: ${AUTH_CONTROL_URI:http://localhost:8010/auth/control-auth}
 
 

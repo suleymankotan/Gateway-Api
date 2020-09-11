@@ -1,0 +1,75 @@
+name: Docker Build
+
+on:
+  push:
+    paths-ignore:
+      - pom.xml
+    branches: [master]
+env:
+  GKE_PROJECT: ${{ secrets.GKE_STAGING_PROJECT }}
+  GKE_STAGING_EMAIL: ${{ secrets.GKE_STAGING_EMAIL }}
+  GITHUB_SHA:  ${{ github.sha }}
+  DOCKER_HUB_REGISTRY_HOSTNAME: suleymankotan
+  IMAGE: gateway-api
+  REGISTRY_HOSTNAME: eu.gcr.io
+  DEPLOYMENT_NAME: gateway-api
+  GKE_CLUSTER: prod
+  GKE_ZONE: europe-west3-c
+
+jobs:
+  setup-build-publish-deploy:
+    name: Staging Pipeline
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Build
+        run: mvn -B clean package -DskipTests --file pom.xml
+
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.REPO }}:latest .
+
+      - name: Docker Hub push
+        run: docker push ${{ secrets.REPO }}:latest
+
+      - name: Docker Hub logout
+        run: docker logout
+
+      - name: Setup GCP CLI
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '270.0.0'
+          service_account_email: ${{ secrets.GKE_STAGING_EMAIL }}
+          service_account_key: ${{ secrets.GKE_STAGING_KEY }}
+
+      - run: |
+          gcloud auth configure-docker
+
+      - name: Build Docker
+        run: |
+          docker build -t "$REGISTRY_HOSTNAME"/"$GKE_PROJECT"/"$IMAGE":"$GITHUB_SHA" \
+           --build-arg GITHUB_SHA="$GITHUB_SHA" \
+           --build-arg GITHUB_REF="$GITHUB_REF" .
+      - name: Publish
+        run: |
+          docker push "$REGISTRY_HOSTNAME"/"$GKE_PROJECT"/"$IMAGE":"$GITHUB_SHA"
+
+      - name: Set up Kustomize
+        run: |
+          curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+
+      - name: Deploy
+        run: |
+        gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize edit set image gateway-api="$REGISTRY_HOSTNAME"/"$GKE_PROJECT"/"$IMAGE":"$GITHUB_SHA"
+        ./kustomize build . | kubectl apply -f -
+        kubectl rollout status deployment/$DEPLOYMENT_NAME
+        kubectl get services -o wide
